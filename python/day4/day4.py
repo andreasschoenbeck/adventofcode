@@ -73,7 +73,7 @@ def evalPassport2(passport):
     return valid
 
 content = ""
-with open("C:\\data\\dotnet_projects\\adventofcode\\python\\day4\\input_01.txt", 'r') as f:
+with open("input_01.txt", 'r') as f:
     content = f.read()
 
 passports = content.split("\n\n")
