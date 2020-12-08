@@ -1,28 +1,27 @@
-
+import elf_code_lib as lib
 
 instructions = []
-executedInstructions = []
-pointer = 0
-accumulator = 0
 
 with open("C:\\data\\dotnet_projects\\adventofcode\\python\\day8\\input_01.txt", 'r') as f:
     instructions = f.readlines()
 
-
-while pointer not in executedInstructions:
-    instruction = instructions[pointer]
-    parts = instruction.split(" ")
-    operation = parts[0]
-    operand = parts[1]
-
-    executedInstructions.append(pointer)
-    instructionIncrement = 1
-
-    if operation == "acc":
-        accumulator += int(operand)
-    elif operation == "jmp":
-        instructionIncrement = int(operand)
-    
-    pointer += instructionIncrement
+lib.executeWithLoopDetection(instructions)
+accumulator = lib.getAccumulatorValue()
 
 print("accumulator before endless loop: " + str(accumulator))
+
+# part 2
+for i in range(len(instructions)):
+    keep = instructions[i]
+    if instructions[i].startswith("nop"):
+        instructions[i] = instructions[i].replace("nop", "jmp")
+    elif instructions[i].startswith("jmp"):
+        instructions[i] = instructions[i].replace("jmp", "nop")
+    else:
+        continue
+
+    if lib.executeWithLoopDetection(instructions):
+        accumulator = lib.getAccumulatorValue()
+        print("accumulator with corrected code: " + str(accumulator))
+    else:
+        instructions[i] = keep
