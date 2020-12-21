@@ -84,6 +84,17 @@ for message in messages:
 # equally for 11
 # and then combinations of both
 # in the end I summed up the matching messages to come to the number
+# 2x 8 # of matchin rules: 49
+# 3x 8 # of matchin rules: 24
+# 4x 8 # of matchin rules: 13
+# 5x 8 # of matchin rules: 8
+# 2x 11 # of matchin rules: 24
+# 3x 11 # of matchin rules: 6
+# 4x 11 # of matchin rules: 5
+# 2x 8 2x 11 # of matchin rules: 14
+# 3x 8 2x 11 # of matchin rules: 6
+# 2x 8 3x 11 # of matchin rules: 5
+# 3x 8 3x 11 # of matchin rules: 2
 
 print("# of matchin rules: " + str(count))
 
