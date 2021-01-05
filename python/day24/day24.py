@@ -1,3 +1,4 @@
+
 # coordinates like this:
 #    ---
 #    32101234
@@ -12,7 +13,8 @@ def readInput():
     lines = []
     paths = []
 
-    with open("F:\\programming\\github\\adventofcode\\python\\day24\\input_01.txt", 'r') as f:
+    #with open("F:\\programming\\github\\adventofcode\\python\\day24\\input_01.txt", 'r') as f:
+    with open("C:\\data\\dotnet_projects\\adventofcode\\python\\day24\\input_02.txt", 'r') as f:
         lines = f.readlines()
 
     for line in lines:
@@ -60,6 +62,18 @@ def countBlackTiles(tiles):
 
 
 def printTiles(tiles):
+    minRow, maxRow, minCol, maxCol = getDimensions(tiles)
+    
+    for row in range(minRow, maxRow+1):
+        line = ""
+        for col in range(minCol, maxCol+1):
+            if (row,col) in tiles:
+                line += "W" if tiles[(row,col)] else "B"
+            else:
+                line += " "
+        print(line)
+
+def getDimensions(tiles):
     minRow = None
     maxRow = None
     minCol = None
@@ -74,18 +88,58 @@ def printTiles(tiles):
             minCol = col
         if maxCol == None or maxCol < col:
             maxCol = col
-    
-    for row in range(minRow, maxRow+1):
-        line = ""
-        for col in range(minCol, maxCol+1):
-            if (row,col) in tiles:
-                line += "W" if tiles[(row,col)] else "B"
-            else:
-                line += " "
-        print(line)
+    return minRow, maxRow, minCol, maxCol
+
+def flipTilesIteration(tiles):
+    minRow, maxRow, minCol, maxCol = getDimensions(tiles)
+
+    evenMinCol = minCol-2 if minCol%2 == 0 else minCol-1
+    oddMinCol = minCol-1 if minCol%2 == 0 else minCol-2
+
+    evenRange = range(evenMinCol, maxCol+3,2)
+    oddRange = range(oddMinCol, maxCol+3, 2)
+
+    newTiles = dict()
+
+    for row in range(minRow-1, maxRow+2): 
+        lineRange = None
+        if row%2 == 0:
+            # even row gets even cols
+            lineRange = evenRange
+        else:
+            lineRange = oddRange
+
+        for col in lineRange:
+            if not (row, col) in tiles:
+                newTiles[(row,col)] = True
+            if needsFlippin(row, col, tiles):
+                if not (row,col) in tiles:
+                    newTiles[(row,col)] = False # flipped from white
+                else: 
+                    newTiles[(row,col)] = not tiles[(row, col)]
+
+    return newTiles
+
+
+def needsFlippin(row, col, tiles):
+
+    blackCount = 0
+    for rowOffset, colOffset in directions.values():
+        neighbourCoord = (row+rowOffset, col+colOffset)
+        if neighbourCoord in tiles and not tiles[neighbourCoord]:
+            blackCount += 1
+
+    if (row,col) in tiles and not tiles[(row,col)]:
+        # black
+        return blackCount == 0 or blackCount > 2
+    else:
+        # white
+        return blackCount == 2
+
 
 paths = readInput()
 tiles = flipTiles(paths)
 count = countBlackTiles(tiles)
+#tiles = flipTilesIteration(tiles)
 printTiles(tiles)
 print("Number of black tiles: " + str(count))
