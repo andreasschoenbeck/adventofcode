@@ -14,7 +14,7 @@ def readInput():
     paths = []
 
     #with open("F:\\programming\\github\\adventofcode\\python\\day24\\input_01.txt", 'r') as f:
-    with open("C:\\data\\dotnet_projects\\adventofcode\\python\\day24\\input_02.txt", 'r') as f:
+    with open("C:\\data\\dotnet_projects\\adventofcode\\python\\day24\\input_01.txt", 'r') as f:
         lines = f.readlines()
 
     for line in lines:
@@ -110,8 +110,8 @@ def flipTilesIteration(tiles):
             lineRange = oddRange
 
         for col in lineRange:
-            if not (row, col) in tiles:
-                newTiles[(row,col)] = True
+            if (row,col) in tiles and not tiles[(row, col)]:
+                newTiles[(row,col)] = tiles[(row, col)]
             if needsFlippin(row, col, tiles):
                 if not (row,col) in tiles:
                     newTiles[(row,col)] = False # flipped from white
@@ -139,7 +139,9 @@ def needsFlippin(row, col, tiles):
 
 paths = readInput()
 tiles = flipTiles(paths)
-count = countBlackTiles(tiles)
-#tiles = flipTilesIteration(tiles)
-printTiles(tiles)
-print("Number of black tiles: " + str(count))
+
+for i in range(100):
+    tiles = flipTilesIteration(tiles)
+    count = countBlackTiles(tiles)
+    #printTiles(tiles)
+    print("Number of black tiles: " + str(count))
